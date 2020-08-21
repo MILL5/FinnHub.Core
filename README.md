@@ -44,6 +44,7 @@ All implemented requests are in the Get class for easy access.
 -Sentiment
 
 
+Nuget Install coming soon - for now you will have to manually reference the library.
 
 
 
