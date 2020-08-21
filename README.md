@@ -2,11 +2,11 @@
 A C# Wrapper for FinnHub.io API
 
 
-To Use:
+**To Use:**
 
 Create a FinnSettings Object to pass into each request:
 
-Example:
+**Example:**
 
 ```
 FinnHubNet.FinnSettings settings = new FinnHubNet.FinnSettings
@@ -20,7 +20,7 @@ FinnHubNet.FinnSettings settings = new FinnHubNet.FinnSettings
 
 In requests you will pass the FinnSettings object along with any other parameters needed.
 
-Example:
+**Example:**
 
 ```
 var j = FinnHubNet.Get.CompanyInfo(settings, ticker);
@@ -29,8 +29,7 @@ You can then access data from CompanyInfo object J or whichever request you are 
 
 All implemented requests are in the Get class for easy access.
 
-Current FinnnHub API Requests available:
-
+**Current FinnnHub API Requests available:**
 CompanyInfo
 News
 Quote
