@@ -23,10 +23,39 @@ namespace FinnHubNet
             return j;
         }
 
+        public static SentimentRoot Sentiment(FinnSettings settings, string ticker)
+        {
+            string requestURL = settings.BaseURL + settings.Version + "/news-sentiment?symbol=" + ticker;
+
+            WebClient client = new WebClient();
+            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+
+            var json = client.DownloadString(requestURL);
+
+            SentimentRoot j = JsonConvert.DeserializeObject<SentimentRoot>(json);
+
+            return j;
+        }
+
 
         public static List<News> News(FinnSettings settings, string category)
         {
             string requestURL = settings.BaseURL + settings.Version + "/news?category=" + category;
+
+            WebClient client = new WebClient();
+            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+
+            var json = client.DownloadString(requestURL);
+
+            List<News> j = JsonConvert.DeserializeObject<List<News>>(json);
+
+            return j;
+        }
+
+        public static List<News> CompanyNews(FinnSettings settings, string ticker, string startdate, string enddate)
+        {
+
+            string requestURL = settings.BaseURL + settings.Version + "/company-news?symbol=" + ticker + "&from=" + startdate + "&to=" + enddate;
 
             WebClient client = new WebClient();
             client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
@@ -177,5 +206,49 @@ namespace FinnHubNet
         [JsonProperty("url")]
         public string Url { get; set; }
     }
+
+
+    public class SentimentRoot
+    {
+        [JsonProperty("buzz")]
+        public Buzz Buzz { get; set; }
+
+        [JsonProperty("companyNewsScore")]
+        public float NewsScore { get; set; }
+
+        [JsonProperty("sectorAverageBullishPercent")]
+        public float AverageBullishPercent { get; set; }
+
+        [JsonProperty("sectorAverageNewsScore")]
+        public float AverageNewsScore { get; set; }
+
+        [JsonProperty("sentiment")]
+        public Sentiment Sentiment { get; set; }
+
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; }
+    }
+
+    public class Buzz
+    {
+        [JsonProperty("articlesInLastWeek")]
+        public int ArticlesInLastWeek { get; set; }
+
+        [JsonProperty("buzz")]
+        public float CompanyBuzz { get; set; }
+
+        [JsonProperty("weeklyAverage")]
+        public float WeeklyAverage { get; set; }
+    }
+
+    public class Sentiment
+    {
+        [JsonProperty("bearishPercent")]
+        public float BearishPercent { get; set; }
+
+        [JsonProperty("bullishPercent")]
+        public float BullishPercent { get; set; }
+    }
+
 
 }
