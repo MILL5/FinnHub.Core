@@ -47,6 +47,20 @@ All implemented requests are in the Get class for easy access.
 
 -BasicFinancials
 
+-ReportedFinancials
+
+-Filings (SEC Filings)
+
+-IpoCalendar
+
+-Recommendations
+
+-Target (Target Prices)
+
+-EPSs (Earnings Releases)
+
+-EarningsCalendar
+
 
 **Nuget Install coming soon - for now you will have to manually reference the library.**
 
