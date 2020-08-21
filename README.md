@@ -18,15 +18,25 @@ FinnHubNet.FinnSettings settings = new FinnHubNet.FinnSettings
 ```
 
 
-In requests you will pass that settinges object along with any other parameters needed.
+In requests you will pass the FinnSettings object along with any other parameters needed.
 
 Example:
 
 ```
 var j = FinnHubNet.Get.CompanyInfo(settings, ticker);
 ```
-
 You can then access data from CompanyInfo object J or whichever request you are using.
+
+All implemented requests are in the Get class for easy access.
+
+Current FinnnHub API Requests available:
+
+CompanyInfo
+News
+Quote
+StockSymbols
+
+
 
 
 
