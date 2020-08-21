@@ -30,10 +30,16 @@ You can then access data from CompanyInfo object J or whichever request you are 
 All implemented requests are in the Get class for easy access.
 
 **Current FinnnHub API Requests available:**
-CompanyInfo
-News
-Quote
-StockSymbols
+
+-CompanyInfo
+
+-News
+
+-Quote
+
+-StockSymbols
+
+
 
 
 
