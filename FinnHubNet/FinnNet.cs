@@ -23,6 +23,7 @@ namespace FinnHubNet
             return j;
         }
 
+
         public static List<News> News(FinnSettings settings, string category)
         {
             string requestURL = settings.BaseURL + settings.Version + "/news?category=" + category;

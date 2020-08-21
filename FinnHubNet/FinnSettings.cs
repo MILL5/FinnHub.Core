@@ -9,5 +9,6 @@ namespace FinnHubNet
         public string ApiKey { get; set; }
         public string Version { get; set; }
         public string  BaseURL { get; set; }
+        public string Test { get; set; }
     }
 }
