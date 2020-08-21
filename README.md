@@ -33,6 +33,8 @@ All implemented requests are in the Get class for easy access.
 
 -CompanyInfo
 
+-Company News
+
 -News
 
 -Quote
