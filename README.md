@@ -4,6 +4,12 @@ A C# Wrapper for FinnHub.io API
 
 **To Use:**
 
+Install using Nuget: 
+
+```
+PM > Install-Package FinnHubNet -Version 1.0.0
+```
+
 Create a FinnSettings Object to pass into each request:
 
 **Example:**
@@ -62,7 +68,6 @@ All implemented requests are in the Get class for easy access.
 -EarningsCalendar
 
 
-**Nuget Install coming soon - for now you will have to manually reference the library.**
 
 
 
