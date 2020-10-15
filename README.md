@@ -7,7 +7,7 @@ A C# Wrapper for FinnHub.io API
 Install using Nuget: 
 
 ```
-PM > Install-Package FinnHubNet -Version 1.0.0
+PM > Install-Package FinnHubNet -Version 1.0.1
 ```
 
 Create a FinnSettings Object to pass into each request:
