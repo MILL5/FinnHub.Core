@@ -9,7 +9,7 @@ namespace FinnHubNet
     {
         public Earning[] earningsCalendar { get; set; }
     }
-
+    
     public class Earning
     {
         public string date { get; set; }
@@ -22,6 +22,5 @@ namespace FinnHubNet
         public string symbol { get; set; }
         public string year { get; set; }
     }
-
 
 }
