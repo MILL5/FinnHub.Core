@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,16 +15,36 @@ namespace FinnHubNet
 
     public class Metric
     {
+        [JsonProperty(PropertyName = "10DayAverageTradingVolume")]
         public string _10DayAverageTradingVolume { get; set; }
+
+        [JsonProperty(PropertyName = "13WeekPriceReturnDaily")]
         public string _13WeekPriceReturnDaily { get; set; }
+
+        [JsonProperty(PropertyName = "26WeekPriceReturnDaily")]
         public string _26WeekPriceReturnDaily { get; set; }
+
+        [JsonProperty(PropertyName = "3MonthAverageTradingVolume")]
         public string _3MonthAverageTradingVolume { get; set; }
+
+        [JsonProperty(PropertyName = "52WeekHigh")]
         public string _52WeekHigh { get; set; }
+
+        [JsonProperty(PropertyName = "52WeekHighDate")]
         public string _52WeekHighDate { get; set; }
+
+        [JsonProperty(PropertyName = "52WeekLow")]
         public string _52WeekLow { get; set; }
+
+        [JsonProperty(PropertyName = "52WeekLowDate")]
         public string _52WeekLowDate { get; set; }
+
+        [JsonProperty(PropertyName = "52WeekPriceReturnDaily")]
         public string _52WeekPriceReturnDaily { get; set; }
+
+        [JsonProperty(PropertyName = "5DayPriceReturnDaily")]
         public string _5DayPriceReturnDaily { get; set; }
+
         public string assetTurnoverAnnual { get; set; }
         public string assetTurnoverTTM { get; set; }
         public string beta { get; set; }
