@@ -20,6 +20,4 @@ namespace FinnHub.Core
         public string symbol { get; set; }
         public string totalSharesValue { get; set; }
     }
-
-
 }
