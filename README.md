@@ -1,5 +1,5 @@
-# FinnHubNet
-A C# Wrapper for FinnHub.io API
+# FinnHub.Core
+This is a .NET class library for the FinnHub APIs for use with .NET Standard, .NET Core, and the new .NET 5.0.
 
 
 **To Use:**
@@ -15,7 +15,7 @@ Create a FinnSettings Object to pass into each request:
 **Example:**
 
 ```
-FinnHubNet.FinnSettings settings = new FinnHubNet.FinnSettings
+FinnHub.Core.FinnSettings settings = new FinnHubNet.FinnSettings
             {
                 ApiKey = "YOUR API KEY",
                 BaseURL = "CURRENT BASE URL", //current URL is https://finnhub.io/
@@ -29,7 +29,7 @@ In requests you will pass the FinnSettings object along with any other parameter
 **Example:**
 
 ```
-var j = FinnHubNet.Get.CompanyInfo(settings, ticker);
+var j = FinnHub.Core.Get.CompanyInfo(settings, ticker);
 ```
 You can then access data from CompanyInfo object J or whichever request you are using.
 
@@ -66,11 +66,3 @@ All implemented requests are in the Get class for easy access.
 -EPSs (Earnings Releases)
 
 -EarningsCalendar
-
-
-
-
-
-
-
-
