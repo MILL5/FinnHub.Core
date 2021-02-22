@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>MILL5</Authors>
-    <PackageTags>FinnHub,stocks,financial</PackageTags>
+    <PackageTags>stocks,financial,finnhub,price,api</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
@@ -17,6 +17,9 @@
     <RepositoryUrl>https://github.com/MILL5/FinnHubNet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>finnhub.png</PackageIcon>
+	<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +33,4 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
-	
-	
-
 </Project>
