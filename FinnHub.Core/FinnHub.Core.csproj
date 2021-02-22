@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>MILL5</Authors>
+    <PackageTags>FinnHub,stocks,financial</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Description>A .NET class library for use against the FinnHub APIs supporting .NET Standard, .NET Core, and the new .NET 5.0</Description>
+    <Copyright>Copyright © MILL5, LLC 2021</Copyright>
+    <PackageProjectUrl>https://github.com/MILL5/FinnHubNet</PackageProjectUrl>
+    <Version>1.0.0</Version>
+    <RootNamespace>FinnHub.Core</RootNamespace>
+    <AssemblyName>FinnHub.Core</AssemblyName>
+    <Company>MILL5</Company>
+    <RepositoryUrl>https://github.com/MILL5/FinnHubNet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>finnhub.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Pineapple" Version="1.0.18" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="finnhub.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+	
+	
+
+</Project>

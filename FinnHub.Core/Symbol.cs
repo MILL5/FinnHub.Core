@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FinnHubNet
+namespace FinnHub.Core
 {
     public class Symbol
     {

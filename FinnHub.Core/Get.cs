@@ -3,14 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using static Pineapple.Common.Preconditions;
 
-namespace FinnHubNet
+namespace FinnHub.Core
 {
 
     public class Get
     {
         public static CompanyInfo CompanyInfo(FinnSettings settings, string ticker)
         {
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
+
             string requestURL = settings.BaseURL + settings.Version + "/stock/profile2?symbol=" + ticker;
 
             WebClient client = new WebClient();
@@ -43,7 +47,7 @@ namespace FinnHubNet
             return j;
         }
 
-        public static List<String> Peers(FinnSettings settings, string ticker)
+        public static List<string> Peers(FinnSettings settings, string ticker)
         {
             string requestURL = settings.BaseURL + settings.Version + "/stock/peers?symbol=" + ticker;
 
@@ -52,7 +56,7 @@ namespace FinnHubNet
 
             var json = client.DownloadString(requestURL);
 
-            List<String> j = JsonConvert.DeserializeObject<List<String>>(json);
+            List<string> j = JsonConvert.DeserializeObject<List<string>>(json);
 
             return j;
         }
