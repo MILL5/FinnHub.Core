@@ -1,5 +1,5 @@
 # FinnHub.Core
-This is a .NET class library for the FinnHub APIs for use with .NET Standard, .NET Core, and the new .NET 5.0.
+This is a .NET class library for the FinnHub APIs for use with .NET Standard, .NET Core, and the new .NET 5.0.  We will be supporting the premium features of the FinnHub API in edition to the standard features (i.e. free).
 
 
 **To Use:**
