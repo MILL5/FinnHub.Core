@@ -7,7 +7,7 @@ This is a .NET class library for the FinnHub APIs for use with .NET Standard, .N
 Install using Nuget: 
 
 ```
-PM > Install-Package FinnHubNet -Version 1.0.2
+PM > Install-Package FinnHub.Core -Version 1.0.0
 ```
 
 Create a FinnSettings Object to pass into each request:
