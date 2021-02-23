@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using static Pineapple.Common.Preconditions;
 
 namespace FinnHub.Core
 {
-
     public class Get
     {
         public static CompanyInfo CompanyInfo(FinnSettings settings, string ticker)
@@ -190,7 +187,7 @@ namespace FinnHub.Core
 
             var json = client.DownloadString(requestURL);
 
-            List<Recommendation> j = JsonConvert.DeserializeObject<List<Recommendation>> (json);
+            List<Recommendation> j = JsonConvert.DeserializeObject<List<Recommendation>>(json);
 
             return j;
         }

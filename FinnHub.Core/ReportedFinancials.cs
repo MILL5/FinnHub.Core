@@ -1,59 +1,109 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace FinnHub.Core
-{ 
+{
     public class ReportedFinancials
     {
-        public string cik { get; set; }
-        public Datum[] data { get; set; }
-        public string symbol { get; set; }
+        [JsonProperty("cik")]
+        public string Cik { get; set; }
+
+        [JsonProperty("data")]
+        public Datum[] Data { get; set; }
+
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; }
     }
 
     public class Datum
     {
-        public string accessNumber { get; set; }
-        public string symbol { get; set; }
-        public string cik { get; set; }
-        public string year { get; set; }
-        public string quarter { get; set; }
-        public string form { get; set; }
-        public string startDate { get; set; }
-        public string endDate { get; set; }
-        public string filedDate { get; set; }
-        public string acceptedDate { get; set; }
-        public Report report { get; set; }
+        [JsonProperty("accessNumber")]
+        public string AccessNumber { get; set; }
+
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; }
+
+        [JsonProperty("cik")]
+        public string Cik { get; set; }
+
+        [JsonProperty("year")]
+        public string Year { get; set; }
+
+        [JsonProperty("quarter")]
+        public string Quarter { get; set; }
+
+        [JsonProperty("form")]
+        public string Form { get; set; }
+
+        [JsonProperty("startDate")]
+        public string StartDate { get; set; }
+
+        [JsonProperty("endDate")]
+        public string EndDate { get; set; }
+
+        [JsonProperty("filedDate")]
+        public string FiledDate { get; set; }
+
+        [JsonProperty("acceptedDate")]
+        public string AcceptedDate { get; set; }
+
+        [JsonProperty("report")]
+        public Report Report { get; set; }
     }
 
     public class Report
     {
-        public B[] bs { get; set; }
-        public Cf[] cf { get; set; }
-        public Ic[] ic { get; set; }
+        [JsonProperty("bs")]
+        public B[] Bs { get; set; }
+
+        [JsonProperty("cf")]
+        public Cf[] Cf { get; set; }
+
+        [JsonProperty("ic")]
+        public Ic[] Ic { get; set; }
     }
 
     public class B
     {
-        public string unit { get; set; }
-        public string label { get; set; }
-        public string value { get; set; }
-        public string concept { get; set; }
+        [JsonProperty("unit")]
+        public string Unit { get; set; }
+
+        [JsonProperty("label")]
+        public string Label { get; set; }
+
+        [JsonProperty("value")]
+        public string Value { get; set; }
+
+        [JsonProperty("concept")]
+        public string Concept { get; set; }
     }
+
     public class Cf
     {
-        public string unit { get; set; }
-        public string label { get; set; }
-        public string value { get; set; }
-        public string concept { get; set; }
+        [JsonProperty("unit")]
+        public string Unit { get; set; }
+
+        [JsonProperty("label")]
+        public string Label { get; set; }
+
+        [JsonProperty("value")]
+        public string Value { get; set; }
+
+        [JsonProperty("concept")]
+        public string Concept { get; set; }
     }
 
     public class Ic
     {
-        public string unit { get; set; }
-        public string label { get; set; }
-        public string value { get; set; }
-        public string concept { get; set; }
-    }
+        [JsonProperty("unit")]
+        public string Unit { get; set; }
 
+        [JsonProperty("label")]
+        public string Label { get; set; }
+
+        [JsonProperty("value")]
+        public string Value { get; set; }
+
+        [JsonProperty("concept")]
+        public string Concept { get; set; }
+    }
 }

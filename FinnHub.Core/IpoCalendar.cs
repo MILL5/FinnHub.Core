@@ -1,23 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace FinnHub.Core
 {
     public class IpoCalendar
     {
-        public IPO[] ipoCalendar { get; set; }
+        [JsonProperty("ipoCalendar")]
+        public IPO[] IPOCalendar { get; set; }
     }
 
     public class IPO
     {
-        public string date { get; set; }
-        public string exchange { get; set; }
-        public string name { get; set; }
-        public string numberOfShares { get; set; }
-        public string price { get; set; }
-        public string status { get; set; }
-        public string symbol { get; set; }
-        public string totalSharesValue { get; set; }
+        [JsonProperty("date")]
+        public string Date { get; set; }
+
+        [JsonProperty("exchange")]
+        public string Exchange { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("numberOfShares")]
+        public string NumberOfShares { get; set; }
+
+        [JsonProperty("price")]
+        public string Price { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; }
+
+        [JsonProperty("totalSharesValue")]
+        public string TotalSharesValue { get; set; }
     }
 }
