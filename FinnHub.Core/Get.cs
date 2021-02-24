@@ -1,243 +1,251 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using static Newtonsoft.Json.JsonConvert;
 using static Pineapple.Common.Preconditions;
 
+// no static methods, use dependency injection
 namespace FinnHub.Core
 {
     public class Get
     {
-        public static CompanyInfo CompanyInfo(FinnSettings settings, string ticker)
+        const string COMPANY_PROFILE_REGULAR_ENDPOINT = "/stock/profile2?symbol=";
+        const string COMPANY_PROFILE_PREMIUM_ENDPOINT = "/stock/profile?symbol=";
+        const string METRIC_ENDPOINT = "/stock/metric?symbol=";
+        const string PEERS_ENDPOINT = "/stock/peers?symbol=";
+        const string NEWS_SENTIMENT_ENDPOINT = "/news-sentiment?symbol=";
+        const string FINANCIALS_REPORTED_ENDPOINT = "/stock/financials-reported?symbol=";
+        const string NEWS_ENDPOINT = "/news?category=";
+        const string COMPANY_NEWS_ENDPOINT = "/company-news?symbol=";
+        const string STOCK_SYMBOLS_ENDPOINT = "/stock/symbol?exchange=";
+        const string QUOTE_ENDPOINT = "/quote?symbol=";
+        const string FILINGS_ENDPOINT = "/stock/filings?symbol=";
+        const string IPO_CALENDAR_ENDPOINT = "/calendar/ipo?from=";
+        const string RECOMMENDATION_ENDPOINT = "/stock/recommendation?symbol=";
+        const string STOCK_PRICE_TARGET_ENDPOINT = "/stock/price-target?symbol=";
+        const string STOCK_EARNINGS_ENDPOINT = "/stock/earnings?symbol=";
+        const string CALENDAR_EARNINGS_ENDPOINT = "/calendar/earnings?from=";
+
+        private static readonly HttpClient _httpClient;
+        private static readonly JsonSerializerSettings _jsonSettings;
+       
+
+        static Get()
+        {
+            _httpClient = new HttpClient();
+            _jsonSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+        }
+
+        //public static CompanyInfo CompanyInfo(FinnSettings settings, string ticker)
+        //{
+        //    CheckIsNotNull(nameof(settings), settings);
+        //    CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
+
+        //    string requestURL = settings.BaseURL + settings.Version + "/stock/profile2?symbol=" + ticker;
+
+        //    WebClient client = new WebClient();
+        //    client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+
+        //    var json = client.DownloadString(requestURL);
+
+        //    CompanyInfo j = JsonConvert.DeserializeObject<CompanyInfo>(json);
+
+        //    return j;
+        //}
+        // add compression (gzip brotli)
+        public static async Task<CompanyInfo> CompanyInfo(FinnSettings settings, string ticker, bool usePremium = false)
         {
             CheckIsNotNull(nameof(settings), settings);
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = settings.BaseURL + settings.Version + "/stock/profile2?symbol=" + ticker;
+            string requestURL = usePremium ? $"{settings.BaseURL}{settings.Version}{COMPANY_PROFILE_PREMIUM_ENDPOINT}{ticker}" :
+                $"{settings.BaseURL}{settings.Version}{COMPANY_PROFILE_REGULAR_ENDPOINT}{ticker}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
-
-            var json = client.DownloadString(requestURL);
-
-            CompanyInfo j = JsonConvert.DeserializeObject<CompanyInfo>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            // 1 get response
+            // 2 ensure success, if error get the exception
+            // 3 get string and deserialize object from response
+            return DeserializeObject<CompanyInfo>(json);
         }
 
-        public static BasicFinancials BasicFinancials(FinnSettings settings, string ticker, string metric)
+        public static async Task<BasicFinancials> BasicFinancials(FinnSettings settings, string ticker, string metric)
         {
-            var jsonSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore
-            };
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
+            CheckIsNotNullOrWhitespace(nameof(metric), metric);
 
-            string requestURL = settings.BaseURL + settings.Version + "/stock/metric?symbol=" + ticker + "&metric=" + metric;
+            string requestURL = $"{settings.BaseURL}{settings.Version}{METRIC_ENDPOINT}{ticker}&metric={metric}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
-
-            var json = client.DownloadString(requestURL);
-
-            BasicFinancials j = JsonConvert.DeserializeObject<BasicFinancials>(json, jsonSettings);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<BasicFinancials>(json, _jsonSettings);
         }
 
-        public static List<string> Peers(FinnSettings settings, string ticker)
+        public static async Task<List<string>> Peers(FinnSettings settings, string ticker)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/stock/peers?symbol=" + ticker;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{PEERS_ENDPOINT}{ticker}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            List<string> j = JsonConvert.DeserializeObject<List<string>>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<List<string>>(json);
         }
 
-        public static SentimentRoot Sentiment(FinnSettings settings, string ticker)
+        public static async Task<SentimentRoot> Sentiment(FinnSettings settings, string ticker)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/news-sentiment?symbol=" + ticker;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{NEWS_SENTIMENT_ENDPOINT}{ticker}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            SentimentRoot j = JsonConvert.DeserializeObject<SentimentRoot>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<SentimentRoot>(json);
         }
 
-        public static ReportedFinancials ReportedFinancials(FinnSettings settings, string ticker, string freq)
+        public static async Task<ReportedFinancials> ReportedFinancials(FinnSettings settings, string ticker, string freq)
         {
-            var jsonSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore
-            };
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
+            CheckIsNotNullOrWhitespace(nameof(freq), freq);
 
-            string requestURL = settings.BaseURL + settings.Version + "/stock/financials-reported?symbol=" + ticker + "&freq=" + freq;
+            string requestURL = $"{settings.BaseURL}{settings.Version}{FINANCIALS_REPORTED_ENDPOINT}{ticker}{"&freq="}{freq}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
-
-            var json = client.DownloadString(requestURL);
-
-            ReportedFinancials j = JsonConvert.DeserializeObject<ReportedFinancials>(json, jsonSettings);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<ReportedFinancials>(json, _jsonSettings);
         }
 
-
-        public static List<News> News(FinnSettings settings, string category)
+        public static async Task<List<News>> News(FinnSettings settings, string category)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/news?category=" + category;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(category), category);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{NEWS_ENDPOINT}{category}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            List<News> j = JsonConvert.DeserializeObject<List<News>>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<List<News>>(json);
         }
 
-        public static List<News> CompanyNews(FinnSettings settings, string ticker, string startdate, string enddate)
+        public static async Task<List<News>> CompanyNews(FinnSettings settings, string ticker, string startDate, string endDate)
         {
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
+            CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
+            CheckIsNotNullOrWhitespace(nameof(endDate), endDate);
 
-            string requestURL = settings.BaseURL + settings.Version + "/company-news?symbol=" + ticker + "&from=" + startdate + "&to=" + enddate;
+            string requestURL = $"{settings.BaseURL}{settings.Version}{COMPANY_NEWS_ENDPOINT}{ticker}{"&from="}{startDate}{"&to="}{endDate}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
-
-            var json = client.DownloadString(requestURL);
-
-            List<News> j = JsonConvert.DeserializeObject<List<News>>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<List<News>>(json);
         }
 
-        public static List<Symbol> StockSymbols(FinnSettings settings, string exchange)
+        public static async Task<List<Symbol>> StockSymbols(FinnSettings settings, string exchange)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/stock/symbol?exchange=" + exchange;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(exchange), exchange);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{STOCK_SYMBOLS_ENDPOINT}{exchange}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            List<Symbol> j = JsonConvert.DeserializeObject<List<Symbol>>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<List<Symbol>>(json);
         }
 
-        public static Quote Quote(FinnSettings settings, string ticker)
+        public static async Task<Quote> Quote(FinnSettings settings, string ticker)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/quote?symbol=" + ticker;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{QUOTE_ENDPOINT}{ticker}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            Quote j = JsonConvert.DeserializeObject<Quote>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<Quote>(json);
         }
 
-        public static List<Filing> Filings(FinnSettings settings, string ticker)
+        public static async Task<List<Filing>> Filings(FinnSettings settings, string ticker)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/stock/filings?symbol=" + ticker;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{FILINGS_ENDPOINT}{ticker}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            List<Filing> j = JsonConvert.DeserializeObject<List<Filing>>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<List<Filing>>(json);
         }
 
-        public static IpoCalendar IpoCalendar(FinnSettings settings, string startdate, string enddate)
+        public static async Task<IpoCalendar> IpoCalendar(FinnSettings settings, string startDate, string endDate)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/calendar/ipo?from=" + startdate + "&to=" + enddate;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
+            CheckIsNotNullOrWhitespace(nameof(endDate), endDate);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{IPO_CALENDAR_ENDPOINT}{startDate}{"&to="}{endDate}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            IpoCalendar j = JsonConvert.DeserializeObject<IpoCalendar>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<IpoCalendar>(json);
         }
 
-        public static List<Recommendation> Recommendations(FinnSettings settings, string ticker)
+        public static async Task<List<Recommendation>> Recommendations(FinnSettings settings, string ticker)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/stock/recommendation?symbol=" + ticker;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{RECOMMENDATION_ENDPOINT}{ticker}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            List<Recommendation> j = JsonConvert.DeserializeObject<List<Recommendation>>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<List<Recommendation>>(json);
         }
 
-        public static Target Target(FinnSettings settings, string ticker)
+        public static async Task<Target> Target(FinnSettings settings, string ticker)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/stock/price-target?symbol=" + ticker;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{STOCK_PRICE_TARGET_ENDPOINT}{ticker}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            Target j = JsonConvert.DeserializeObject<Target>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<Target>(json);
         }
 
-        public static List<EPS> EPSs(FinnSettings settings, string ticker)
+        public static async Task<List<EPS>> EPSs(FinnSettings settings, string ticker)
         {
-            string requestURL = settings.BaseURL + settings.Version + "/stock/earnings?symbol=" + ticker;
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
+            string requestURL = $"{settings.BaseURL}{settings.Version}{STOCK_EARNINGS_ENDPOINT}{ticker}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            var json = client.DownloadString(requestURL);
-
-            List<EPS> j = JsonConvert.DeserializeObject<List<EPS>>(json);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<List<EPS>>(json);
         }
 
-        public static EarningsCalendar EarningsCalendar(FinnSettings settings, string startdate, string enddate)
+        public static async Task<EarningsCalendar> EarningsCalendar(FinnSettings settings, string startDate, string endDate)
         {
-            var jsonSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore
-            };
+            CheckIsNotNull(nameof(settings), settings);
+            CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
+            CheckIsNotNullOrWhitespace(nameof(endDate), endDate);
 
-            string requestURL = settings.BaseURL + settings.Version + "/calendar/earnings?from=" + startdate + "&to=" + enddate;
+            string requestURL = $"{settings.BaseURL}{settings.Version}{CALENDAR_EARNINGS_ENDPOINT}{startDate}{"&to="}{endDate}";
+            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", settings.ApiKey);
 
-            WebClient client = new WebClient();
-            client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
-
-            var json = client.DownloadString(requestURL);
-
-            EarningsCalendar j = JsonConvert.DeserializeObject<EarningsCalendar>(json, jsonSettings);
-
-            return j;
+            string json = await _httpClient.GetStringAsync(requestURL);
+            return DeserializeObject<EarningsCalendar>(json, _jsonSettings);
         }
     }
 }
