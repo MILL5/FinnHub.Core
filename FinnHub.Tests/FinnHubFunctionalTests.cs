@@ -13,7 +13,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetMicrosoftByTicker()
         {
-            var service = GetService<FinnHubCalls>();
+            var service = GetService<FinnHubClient>();
 
             var companyInfo = await service.CompanyInfo(ticker: TICKER);
 
