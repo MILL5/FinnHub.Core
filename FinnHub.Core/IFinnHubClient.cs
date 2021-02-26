@@ -5,20 +5,20 @@ namespace FinnHub.Core
 {
     public interface IFinnHubClient
     {
-        Task<CompanyInfo> CompanyInfo(string ticker);
-        Task<BasicFinancials> BasicFinancials(string ticker, string metric);
-        Task<List<string>> Peers(string ticker);
-        Task<SentimentRoot> Sentiment(string ticker);
-        Task<ReportedFinancials> ReportedFinancials(string ticker, string freq);
-        Task<List<News>> News(string category);
-        Task<List<News>> CompanyNews(string ticker, string startDate, string endDate);
-        Task<List<Symbol>> StockSymbols(string exchange);
-        Task<Quote> Quote(string ticker);
-        Task<List<Filing>> Filings(string ticker);
-        Task<IpoCalendar> IpoCalendar(string startDate, string endDate);
-        Task<List<Recommendation>> Recommendations(string ticker);
-        Task<Target> Target(string ticker);
-        Task<List<EPS>> EPSs(string ticker);
-        Task<EarningsCalendar> EarningsCalendar(string startDate, string endDate);
+        Task<CompanyInfo> GetCompanyInfo(string ticker);
+        Task<BasicFinancials> GetBasicFinancials(string ticker, string metric);
+        Task<List<string>> GetPeers(string ticker);
+        Task<SentimentRoot> GetSentiment(string ticker);
+        Task<ReportedFinancials> GetReportedFinancials(string ticker, string freq);
+        Task<List<News>> GetNews(string category);
+        Task<List<News>> GetCompanyNews(string ticker, string startDate, string endDate);
+        Task<List<Symbol>> GetStockSymbols(string exchange);
+        Task<Quote> GetQuote(string ticker);
+        Task<List<Filing>> GetFilings(string ticker);
+        Task<IpoCalendar> GetIpoCalendar(string startDate, string endDate);
+        Task<List<Recommendation>> GetRecommendations(string ticker);
+        Task<Target> GetTarget(string ticker);
+        Task<List<EPS>> GetEPSs(string ticker);
+        Task<EarningsCalendar> GetEarningsCalendar(string startDate, string endDate);
     }
 }

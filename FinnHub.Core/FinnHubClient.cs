@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 using static Newtonsoft.Json.JsonConvert;
 using static Pineapple.Common.Preconditions;
 
-// no static methods, use dependency injection
-// replace string concatenation with interpolation
-// use const for strings
-// add compression (gzip brotli)
 namespace FinnHub.Core
 {
     public class FinnHubClient : IFinnHubClient
@@ -32,7 +28,6 @@ namespace FinnHub.Core
         const string CALENDAR_EARNINGS_ENDPOINT = "/calendar/earnings?from=";
         const string HTTPCLIENT_NAME = "FinnHubHttpClient";
 
-        private readonly HttpClient _httpClient;
         private readonly JsonSerializerSettings _jsonSettings;
         private readonly IFinnHubDependencies _dependencies;
 
@@ -40,7 +35,6 @@ namespace FinnHub.Core
         {
             CheckIsNotNull(nameof(dependencies), dependencies);
             _dependencies = dependencies;
-            _httpClient = new HttpClient();
             _jsonSettings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
@@ -48,236 +42,446 @@ namespace FinnHub.Core
             };
         }
 
-        //static Get()
-        //{
-        //    _httpClient = new HttpClient();
-        //    _jsonSettings = new JsonSerializerSettings
-        //    {
-        //        NullValueHandling = NullValueHandling.Ignore,
-        //        MissingMemberHandling = MissingMemberHandling.Ignore
-        //    };
-        //}
-
-        //public static CompanyInfo CompanyInfo(string ticker)
-        //{
-        //    
-        //    CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
-
-        //    string requestURL = settings.BaseURL + settings.Version + "/stock/profile2?symbol=" + ticker;
-
-        //    WebClient client = new WebClient();
-        //    client.Headers.Set("X-Finnhub-Token", settings.ApiKey);
-
-        //    var json = client.DownloadString(requestURL);
-
-        //    CompanyInfo j = JsonConvert.DeserializeObject<CompanyInfo>(json);
-
-        //    return j;
-        //}
-        
-        public async Task<CompanyInfo> CompanyInfo(string ticker)
+        public async Task<CompanyInfo> GetCompanyInfo(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = _dependencies.Settings.UsePremiumOptions ? $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{COMPANY_PROFILE_PREMIUM_ENDPOINT}{ticker}" :
-                $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{COMPANY_PROFILE_REGULAR_ENDPOINT}{ticker}";
-
             using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
             {
-                client.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
+                string requestURL = _dependencies.Settings.UsePremiumOptions ? $"{client.BaseAddress}{COMPANY_PROFILE_PREMIUM_ENDPOINT}{ticker}" :
+                $"{client.BaseAddress}{COMPANY_PROFILE_REGULAR_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
                     using (var response = await client.SendAsync(request))
                     {
-                        response.EnsureSuccessStatusCode();
-                        string content = await response.Content.ReadAsStringAsync();
-                        if (!response.IsSuccessStatusCode)
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<CompanyInfo>(content);
+                        }
+                        else
                         {
                             throw new FinnHubException
                             {
                                 StatusCode = (int)response.StatusCode,
-                                Content = content
+                                Content = response.ReasonPhrase
                             };
                         }
-                        return DeserializeObject<CompanyInfo>(content);
                     }
                 }
             }
-
-            //string requestURL = usePremium ? $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{COMPANY_PROFILE_PREMIUM_ENDPOINT}{ticker}" :
-            //    $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{COMPANY_PROFILE_REGULAR_ENDPOINT}{ticker}";
-            //_httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            //string json = await _httpClient.GetStringAsync(requestURL);
-            
-            //return DeserializeObject<CompanyInfo>(json);
         }
 
-        public async Task<BasicFinancials> BasicFinancials(string ticker, string metric)
+        public async Task<BasicFinancials> GetBasicFinancials(string ticker, string metric)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
             CheckIsNotNullOrWhitespace(nameof(metric), metric);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{METRIC_ENDPOINT}{ticker}&metric={metric}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<BasicFinancials>(json, _jsonSettings);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{METRIC_ENDPOINT}{ticker}&metric={metric}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<BasicFinancials>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<List<string>> Peers(string ticker)
+        public async Task<List<string>> GetPeers(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{PEERS_ENDPOINT}{ticker}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<List<string>>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{PEERS_ENDPOINT}{ticker}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<List<string>>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<SentimentRoot> Sentiment(string ticker)
+        public async Task<SentimentRoot> GetSentiment(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{NEWS_SENTIMENT_ENDPOINT}{ticker}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<SentimentRoot>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{NEWS_SENTIMENT_ENDPOINT}{ticker}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<SentimentRoot>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<ReportedFinancials> ReportedFinancials(string ticker, string freq)
+        public async Task<ReportedFinancials> GetReportedFinancials(string ticker, string freq)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
             CheckIsNotNullOrWhitespace(nameof(freq), freq);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{FINANCIALS_REPORTED_ENDPOINT}{ticker}{"&freq="}{freq}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<ReportedFinancials>(json, _jsonSettings);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{FINANCIALS_REPORTED_ENDPOINT}{ticker}{"&freq="}{freq}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<ReportedFinancials>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<List<News>> News(string category)
+        public async Task<List<News>> GetNews(string category)
         {
             CheckIsNotNullOrWhitespace(nameof(category), category);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{NEWS_ENDPOINT}{category}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<List<News>>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{NEWS_ENDPOINT}{category}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<List<News>>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<List<News>> CompanyNews(string ticker, string startDate, string endDate)
+        public async Task<List<News>> GetCompanyNews(string ticker, string startDate, string endDate)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
             CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
             CheckIsNotNullOrWhitespace(nameof(endDate), endDate);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{COMPANY_NEWS_ENDPOINT}{ticker}{"&from="}{startDate}{"&to="}{endDate}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<List<News>>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{COMPANY_NEWS_ENDPOINT}{ticker}{"&from="}{startDate}{"&to="}{endDate}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<List<News>>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<List<Symbol>> StockSymbols(string exchange)
+        public async Task<List<Symbol>> GetStockSymbols(string exchange)
         {
             CheckIsNotNullOrWhitespace(nameof(exchange), exchange);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{STOCK_SYMBOLS_ENDPOINT}{exchange}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<List<Symbol>>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{STOCK_SYMBOLS_ENDPOINT}{exchange}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<List<Symbol>>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<Quote> Quote(string ticker)
+        public async Task<Quote> GetQuote(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{QUOTE_ENDPOINT}{ticker}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<Quote>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{QUOTE_ENDPOINT}{ticker}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<Quote>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<List<Filing>> Filings(string ticker)
+        public async Task<List<Filing>> GetFilings(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{FILINGS_ENDPOINT}{ticker}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<List<Filing>>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{FILINGS_ENDPOINT}{ticker}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<List<Filing>>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<IpoCalendar> IpoCalendar(string startDate, string endDate)
+        public async Task<IpoCalendar> GetIpoCalendar(string startDate, string endDate)
         {
             CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
             CheckIsNotNullOrWhitespace(nameof(endDate), endDate);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{IPO_CALENDAR_ENDPOINT}{startDate}{"&to="}{endDate}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<IpoCalendar>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{IPO_CALENDAR_ENDPOINT}{startDate}{"&to="}{endDate}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<IpoCalendar>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<List<Recommendation>> Recommendations(string ticker)
+        public async Task<List<Recommendation>> GetRecommendations(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{RECOMMENDATION_ENDPOINT}{ticker}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<List<Recommendation>>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{RECOMMENDATION_ENDPOINT}{ticker}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<List<Recommendation>>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<Target> Target(string ticker)
+        public async Task<Target> GetTarget(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{STOCK_PRICE_TARGET_ENDPOINT}{ticker}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<Target>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{STOCK_PRICE_TARGET_ENDPOINT}{ticker}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<Target>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<List<EPS>> EPSs(string ticker)
+        public async Task<List<EPS>> GetEPSs(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{STOCK_EARNINGS_ENDPOINT}{ticker}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<List<EPS>>(json);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{STOCK_EARNINGS_ENDPOINT}{ticker}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<List<EPS>>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
 
-        public async Task<EarningsCalendar> EarningsCalendar(string startDate, string endDate)
+        public async Task<EarningsCalendar> GetEarningsCalendar(string startDate, string endDate)
         {
             CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
             CheckIsNotNullOrWhitespace(nameof(endDate), endDate);
 
-            string requestURL = $"{_dependencies.Settings.BaseURL}{_dependencies.Settings.Version}{CALENDAR_EARNINGS_ENDPOINT}{startDate}{"&to="}{endDate}";
-            _httpClient.DefaultRequestHeaders.Add("X-Finnhub-Token", _dependencies.Settings.ApiKey);
-
-            string json = await _httpClient.GetStringAsync(requestURL);
-            return DeserializeObject<EarningsCalendar>(json, _jsonSettings);
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{CALENDAR_EARNINGS_ENDPOINT}{startDate}{"&to="}{endDate}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<EarningsCalendar>(content);
+                        }
+                        else
+                        {
+                            throw new FinnHubException
+                            {
+                                StatusCode = (int)response.StatusCode,
+                                Content = response.ReasonPhrase
+                            };
+                        }
+                    }
+                }
+            }
         }
-    }
-
-    public class FinnHubException : Exception
-    {
-        public int StatusCode { get; set; }
-
-        public string Content { get; set; }
     }
 }
