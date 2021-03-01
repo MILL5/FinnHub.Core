@@ -42,7 +42,7 @@ namespace FinnHub.Core
             };
         }
 
-        public async Task<CompanyInfo> GetCompanyInfo(string ticker)
+        public async Task<CompanyInfo> GetCompanyInfoAsync(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -61,18 +61,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<BasicFinancials> GetBasicFinancials(string ticker, string metric)
+        public async Task<BasicFinancials> GetBasicFinancialsAsync(string ticker, string metric)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
             CheckIsNotNullOrWhitespace(nameof(metric), metric);
@@ -91,18 +87,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<List<string>> GetPeers(string ticker)
+        public async Task<List<string>> GetPeersAsync(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -120,18 +112,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<SentimentRoot> GetSentiment(string ticker)
+        public async Task<SentimentRoot> GetSentimentAsync(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -149,18 +137,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<ReportedFinancials> GetReportedFinancials(string ticker, string freq)
+        public async Task<ReportedFinancials> GetReportedFinancialsAsync(string ticker, string freq)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
             CheckIsNotNullOrWhitespace(nameof(freq), freq);
@@ -179,18 +163,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<List<News>> GetNews(string category)
+        public async Task<List<News>> GetNewsAsync(string category)
         {
             CheckIsNotNullOrWhitespace(nameof(category), category);
 
@@ -208,18 +188,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<List<News>> GetCompanyNews(string ticker, string startDate, string endDate)
+        public async Task<List<News>> GetCompanyNewsAsync(string ticker, string startDate, string endDate)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
             CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
@@ -239,18 +215,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<List<Symbol>> GetStockSymbols(string exchange)
+        public async Task<List<Symbol>> GetStockSymbolsAsync(string exchange)
         {
             CheckIsNotNullOrWhitespace(nameof(exchange), exchange);
 
@@ -268,18 +240,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<Quote> GetQuote(string ticker)
+        public async Task<Quote> GetQuoteAsync(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -297,18 +265,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<List<Filing>> GetFilings(string ticker)
+        public async Task<List<Filing>> GetFilingsAsync(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -326,18 +290,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<IpoCalendar> GetIpoCalendar(string startDate, string endDate)
+        public async Task<IpoCalendar> GetIpoCalendarAsync(string startDate, string endDate)
         {
             CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
             CheckIsNotNullOrWhitespace(nameof(endDate), endDate);
@@ -356,18 +316,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<List<Recommendation>> GetRecommendations(string ticker)
+        public async Task<List<Recommendation>> GetRecommendationsAsync(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -385,18 +341,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<Target> GetTarget(string ticker)
+        public async Task<Target> GetTargetAsync(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -414,18 +366,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<List<EPS>> GetEPSs(string ticker)
+        public async Task<List<EPS>> GetEPSsAsync(string ticker)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -443,18 +391,14 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }
             }
         }
 
-        public async Task<EarningsCalendar> GetEarningsCalendar(string startDate, string endDate)
+        public async Task<EarningsCalendar> GetEarningsCalendarAsync(string startDate, string endDate)
         {
             CheckIsNotNullOrWhitespace(nameof(startDate), startDate);
             CheckIsNotNullOrWhitespace(nameof(endDate), endDate);
@@ -473,11 +417,7 @@ namespace FinnHub.Core
                         }
                         else
                         {
-                            throw new FinnHubException
-                            {
-                                StatusCode = (int)response.StatusCode,
-                                Content = response.ReasonPhrase
-                            };
+                            throw new FinnHubException(response.ReasonPhrase);
                         }
                     }
                 }

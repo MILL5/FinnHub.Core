@@ -4,8 +4,9 @@ namespace FinnHub.Core
 {
     public class FinnHubException : Exception
     {
-        public int StatusCode { get; set; }
-
-        public string Content { get; set; }
+        public FinnHubException(string message)
+        : base(message)
+        {
+        }
     }
 }
