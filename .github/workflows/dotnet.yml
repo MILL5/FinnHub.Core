@@ -29,12 +29,4 @@ jobs:
        FinnHubTokenHeader: ${{ secrets.FINNHUBTOKENHEADER }}
        ApiKey: ${{ secrets.APIKEY }}
        UsePremiumOptions: ${{ secrets.USEPREMIUMOPTIONS }}
-       
       run: dotnet test --no-restore --verbosity normal
-      
-      
-      
-      
-        
-        
-        
