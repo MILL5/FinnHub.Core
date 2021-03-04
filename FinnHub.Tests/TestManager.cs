@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FinnHub.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,10 +27,20 @@ namespace FinnHub.Tests
         [AssemblyInitialize]
         public static void Initialize(TestContext context)
         {
-            Configuration = new ConfigurationBuilder()
+            var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables().Build();
+                .AddJsonFile("appsettings.json");
+
+#if DEBUG
+            if (File.Exists("appsettings.local.json"))
+            {
+                config = config.AddJsonFile("appsettings.local.json");
+            }
+#endif
+
+            Configuration = config
+                .AddEnvironmentVariables()
+                .Build();
 
             var services = new ServiceCollection();
 

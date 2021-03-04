@@ -23,7 +23,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetCompanyInfoByTicker()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var companyInfo = await service.GetCompanyInfoAsync(ticker: TICKER);
 
@@ -34,7 +34,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetBasicFinancialsByTickerAndMetric()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var basicFinancials = await service.GetBasicFinancialsAsync(ticker: TICKER, metric: METRIC);
 
@@ -48,7 +48,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetPeersByTicker()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var peers = await service.GetPeersAsync(ticker: TICKER);
 
@@ -59,7 +59,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetSentimentByTicker()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var sentimentRoot = await service.GetSentimentAsync(ticker: TICKER);
 
@@ -70,7 +70,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetReportedFinancialsByTickerAndFrequency()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var reportedFinancials = await service.GetReportedFinancialsAsync(ticker: TICKER, freq: FREQUENCY);
 
@@ -84,7 +84,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetNewsByCategory()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var news = await service.GetNewsAsync(category: CATEGORY);
 
@@ -95,7 +95,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetCompanyNewsByTickerAndDateRange()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var companyNews = await service.GetCompanyNewsAsync(ticker: TICKER, startDate: START_DATE, endDate: END_DATE);
 
@@ -106,7 +106,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetStockSymbolsByExchange()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var symbols = await service.GetStockSymbolsAsync(exchange: EXCHANGE);
 
@@ -117,7 +117,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetQuoteByTicker()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var symbol = await service.GetQuoteAsync(ticker: TICKER);
 
@@ -128,7 +128,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetFilingsByTicker()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var filings = await service.GetFilingsAsync(ticker: TICKER);
 
@@ -139,7 +139,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetIpoCalendarByDateRange()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var ipoCalendar = await service.GetIpoCalendarAsync(startDate: START_DATE, endDate: END_DATE);
 
@@ -151,7 +151,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetRecommendationsByTicker()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var recommendations = await service.GetRecommendationsAsync(ticker: TICKER);
 
@@ -162,7 +162,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetTargetByTicker()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var target = await service.GetTargetAsync(ticker: TICKER);
 
@@ -173,7 +173,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetEPSsByTicker()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var epss = await service.GetEPSsAsync(ticker: TICKER);
 
@@ -184,7 +184,7 @@ namespace FinnHub.Tests
         [TestMethod]
         public async Task GetEarningsCalendarByDateRange()
         {
-            var service = GetService<FinnHubClient>();
+            var service = GetService<IFinnHubClient>();
 
             var earningsCalendar = await service.GetEarningsCalendarAsync(startDate: START_DATE_EARNINGS, endDate: END_DATE_EARNINGS);
 
