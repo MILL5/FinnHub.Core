@@ -1,18 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace FinnHub.Core
-{ 
+{
     public class Recommendation
     {
-        public string buy { get; set; }
-        public string hold { get; set; }
-        public string period { get; set; }
-        public string sell { get; set; }
-        public string strongBuy { get; set; }
-        public string strongSell { get; set; }
-        public string symbol { get; set; }
+        [JsonProperty("buy")]
+        public string Buy { get; set; }
+
+        [JsonProperty("hold")]
+        public string Hold { get; set; }
+
+        [JsonProperty("period")]
+        public string Period { get; set; }
+
+        [JsonProperty("sell")]
+        public string Sell { get; set; }
+
+        [JsonProperty("strongBuy")]
+        public string StrongBuy { get; set; }
+
+        [JsonProperty("strongSell")]
+        public string StrongSell { get; set; }
+
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; }
+
     }
 
 }

@@ -1,13 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FinnHub.Core
 {
     public class Quote
     {
-
         [JsonProperty("c")]
         public string CurrentPrice { get; set; }
 

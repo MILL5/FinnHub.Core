@@ -1,17 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace FinnHub.Core
 {
     public class Target
     {
-        public string lastUpdated { get; set; }
-        public string symbol { get; set; }
-        public string targetHigh { get; set; }
-        public string targetLow { get; set; }
-        public string targetMean { get; set; }
-        public string targetMedian { get; set; }
-    }
+        [JsonProperty("lastUpdated")]
+        public string LastUpdated { get; set; }
 
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; }
+
+        [JsonProperty("targetHigh")]
+        public string TargetHigh { get; set; }
+
+        [JsonProperty("targetLow")]
+        public string TargetLow { get; set; }
+
+        [JsonProperty("targetMean")]
+        public string TargetMean { get; set; }
+
+        [JsonProperty("targetMedian")]
+        public string TargetMedian { get; set; }
+    }
 }
