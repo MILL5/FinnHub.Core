@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -60,9 +60,7 @@ namespace FinnHub.Core
                             return DeserializeObject<CompanyInfo>(content);
                         }
                         else
-                        {
-                            throw new FinnHubException(response.ReasonPhrase);
-                        }
+                            return null;
                     }
                 }
             }
