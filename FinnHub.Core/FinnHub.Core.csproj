@@ -26,9 +26,10 @@
 
   <ItemGroup>
     <PackageReference Include="BrotliSharpLib" Version="0.3.3" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.12" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Pineapple" Version="1.0.18" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.13" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Pineapple" Version="1.0.26-alpha" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 

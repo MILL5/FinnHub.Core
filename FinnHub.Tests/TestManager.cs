@@ -27,18 +27,10 @@ namespace FinnHub.Tests
         [AssemblyInitialize]
         public static void Initialize(TestContext context)
         {
-            var config = new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-
-#if DEBUG
-            if (File.Exists("appsettings.local.json"))
-            {
-                config = config.AddJsonFile("appsettings.local.json");
-            }
-#endif
-
-            Configuration = config
+                .AddJsonFile("appsettings.json", true)
+                .AddJsonFile("appsettings.local.json", true)
                 .AddEnvironmentVariables()
                 .Build();
 

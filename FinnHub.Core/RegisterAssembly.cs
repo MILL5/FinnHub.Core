@@ -4,7 +4,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using static Pineapple.Common.Preconditions;
-using static System.Environment;
 
 namespace FinnHub.Core
 {
@@ -14,15 +13,16 @@ namespace FinnHub.Core
 
         public static void AddServices(IServiceCollection services, IConfiguration config)
         {
+            const string FINNHUB_URL = "https://finnhub.io/api/v1";
+            const string FINNHUB_TOKEN_HEADER = "X-Finnhub-Token";
+
             CheckIsNotNull(nameof(services), services);
             CheckIsNotNull(nameof(config), config);
             
             var settings = new FinnSettings
             {
-                ApiKey = GetEnvironmentVariable("ApiKey"),
-                BaseURL = GetEnvironmentVariable("FinnHubBaseUrl"),
-                Version = GetEnvironmentVariable("FinnHubApiVersion"),
-                UsePremiumOptions = bool.Parse(GetEnvironmentVariable("UsePremiumOptions"))
+                ApiKey = config["FinnHubApiKey"],
+                UsePremiumOptions = bool.Parse(config["UsePremiumOptions"])
             };
 
             services.AddSingleton(settings);
@@ -31,8 +31,8 @@ namespace FinnHub.Core
             services.AddTransient<BrotliCompressionHandler>();
             services.AddHttpClient(HTTPCLIENT_NAME, client =>
             {
-                client.BaseAddress = new Uri($"{settings.BaseURL}{settings.Version}");
-                client.DefaultRequestHeaders.Add(GetEnvironmentVariable("FinnHubTokenHeader"), settings.ApiKey);
+                client.BaseAddress = new Uri(FINNHUB_URL);
+                client.DefaultRequestHeaders.Add(FINNHUB_TOKEN_HEADER, settings.ApiKey);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
