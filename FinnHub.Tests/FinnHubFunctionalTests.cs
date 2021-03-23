@@ -1,5 +1,6 @@
 using FinnHub.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Threading.Tasks;
 using static FinnHub.Tests.TestManager;
 
@@ -19,6 +20,8 @@ namespace FinnHub.Tests
         const string CURRENT_PRICE = "0";
         const string START_DATE_EARNINGS = "2021-01-25";
         const string END_DATE_EARNINGS = "2021-01-30";
+        const string CANDLE_RESOLUTION = "D";
+        const string STATUS_OK = "ok";
 
         [TestMethod]
         public async Task GetCompanyInfoByTicker()
@@ -190,6 +193,18 @@ namespace FinnHub.Tests
 
             Assert.IsNotNull(earningsCalendar.EarningCalendar);
             Assert.IsNotNull(earningsCalendar.EarningCalendar.Length > 1);
+        }
+
+        [TestMethod]
+        public async Task GetQuoteCandle()
+        {
+            var service = GetService<IFinnHubClient>();
+            var startDate = Convert.ToDateTime(START_DATE);
+            var endDate = Convert.ToDateTime(END_DATE);
+            var quotes = await service.GetQuoteCandleAsync(ticker: TICKER, resolution: CANDLE_RESOLUTION, startDate: startDate, endDate: endDate);
+
+            Assert.IsNotNull(quotes);
+            Assert.IsNotNull(quotes.Status = STATUS_OK);
         }
     }
 }
