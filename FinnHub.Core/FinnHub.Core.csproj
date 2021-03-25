@@ -10,7 +10,7 @@
     <Description>A .NET class library for use against the FinnHub APIs supporting .NET Standard, .NET Core, and the new .NET 5.0</Description>
     <Copyright>Copyright © MILL5, LLC 2021</Copyright>
     <PackageProjectUrl>https://github.com/MILL5/FinnHub.Core</PackageProjectUrl>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <RootNamespace>FinnHub.Core</RootNamespace>
     <AssemblyName>FinnHub.Core</AssemblyName>
     <Company>MILL5</Company>
@@ -20,8 +20,8 @@
 	<PublishRepositoryUrl>true</PublishRepositoryUrl>
 	<IncludeSymbols>true</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	<AssemblyVersion>1.0.2.0</AssemblyVersion>
-	<FileVersion>1.0.2.0</FileVersion>
+	<AssemblyVersion>1.0.3.0</AssemblyVersion>
+	<FileVersion>1.0.3.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
