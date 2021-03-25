@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FinnHub.Core
@@ -20,5 +21,6 @@ namespace FinnHub.Core
         Task<Target> GetTargetAsync(string ticker);
         Task<List<EPS>> GetEPSsAsync(string ticker);
         Task<EarningsCalendar> GetEarningsCalendarAsync(string startDate, string endDate);
+        Task<QuoteCandle> GetQuoteCandleAsync(string ticker, string resolution, DateTime startDate, DateTime endDate);
     }
 }

@@ -19,7 +19,7 @@ namespace FinnHub.Core
             CheckIsNotNull(nameof(services), services);
             CheckIsNotNull(nameof(config), config);
             
-            var settings = new FinnSettings
+            var settings = new FinnHubSettings
             {
                 ApiKey = config["FinnHubApiKey"],
                 UsePremiumOptions = bool.Parse(config["UsePremiumOptions"])

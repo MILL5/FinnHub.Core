@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using static Newtonsoft.Json.JsonConvert;
 using static Pineapple.Common.Preconditions;
+using System;
 
 namespace FinnHub.Core
 {
@@ -26,6 +27,7 @@ namespace FinnHub.Core
         const string STOCK_PRICE_TARGET_ENDPOINT = "/stock/price-target?symbol=";
         const string STOCK_EARNINGS_ENDPOINT = "/stock/earnings?symbol=";
         const string CALENDAR_EARNINGS_ENDPOINT = "/calendar/earnings?from=";
+        const string QUOTE_CANDLE = "/stock/candle?symbol={symbol_placeholder}&resolution={resolution_placeholder}&from={startDate_placeholder}&to={endDate_placeholder}";
         const string HTTPCLIENT_NAME = "FinnHubHttpClient";
 
         private readonly JsonSerializerSettings _jsonSettings;
@@ -420,6 +422,46 @@ namespace FinnHub.Core
                     }
                 }
             }
+        }
+
+        public async Task<QuoteCandle> GetQuoteCandleAsync(string ticker, string resolution, DateTime startDate, DateTime endDate)
+        {
+            CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
+            CheckIsNotNullOrWhitespace(nameof(resolution), resolution);
+            CheckIsNotNull(nameof(startDate), startDate);
+            CheckIsNotNull(nameof(endDate), endDate);
+
+            var startDateUnixTimeStamp = ConvertDatetimeToUnixTimeStamp(startDate).ToString();
+            var endDateUnixTimeStamp = ConvertDatetimeToUnixTimeStamp(endDate).ToString();
+            var candleParameters = QUOTE_CANDLE.Replace("{symbol_placeholder}", ticker)
+                    .Replace("{resolution_placeholder}", resolution)
+                    .Replace("{startDate_placeholder}", startDateUnixTimeStamp)
+                    .Replace("{endDate_placeholder}", endDateUnixTimeStamp);
+
+            using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
+            {
+                string requestURL = $"{client.BaseAddress}{candleParameters}";
+                using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
+                {
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return DeserializeObject<QuoteCandle>(content);
+                        }
+                        else
+                            return null;
+                    }
+                }
+            }
+        }
+
+        private static long ConvertDatetimeToUnixTimeStamp(DateTime date)
+        {
+            var dateTimeOffset = new DateTimeOffset(date);
+            var unixDateTime = dateTimeOffset.ToUnixTimeSeconds();
+            return unixDateTime;
         }
     }
 }
