@@ -13,6 +13,12 @@ namespace FinnHub.Core
         [JsonProperty("displaySymbol")]
         public string DisplaySymbol { get; set; }
 
+        [JsonProperty("figi")]
+        public string Figi { get; set; }
+
+        [JsonProperty("mic")]
+        public string Mic { get; set; }
+
         [JsonProperty("symbol")]
         public string TickerSymbol { get; set; }
 

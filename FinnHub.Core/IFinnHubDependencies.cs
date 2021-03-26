@@ -5,16 +5,16 @@ namespace FinnHub.Core
 {
     public interface IFinnHubDependencies
     {
-        FinnSettings Settings { get; set; }
+        FinnHubSettings Settings { get; set; }
         IHttpClientFactory HttpClientFactory { get; set; }
     }
 
     internal class FinnHubDependencies: IFinnHubDependencies
     {
-        public FinnSettings Settings { get; set; }
+        public FinnHubSettings Settings { get; set; }
         public IHttpClientFactory HttpClientFactory { get; set; }
 
-        public FinnHubDependencies(FinnSettings settings, IHttpClientFactory clientFactory)
+        public FinnHubDependencies(FinnHubSettings settings, IHttpClientFactory clientFactory)
         {
             CheckIsNotNull(nameof(settings), settings);
             CheckIsNotNull(nameof(clientFactory), clientFactory);

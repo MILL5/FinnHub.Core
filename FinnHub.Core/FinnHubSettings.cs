@@ -1,6 +1,6 @@
 ﻿namespace FinnHub.Core
 {
-    public class FinnSettings
+    public class FinnHubSettings
     {
         public string ApiKey { get; set; }
         public bool UsePremiumOptions { get; set; }
