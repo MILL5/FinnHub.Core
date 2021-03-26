@@ -27,6 +27,6 @@ jobs:
        FinnHubApiVersion: ${{ secrets.FINNHUBAPIVERSION }}
        FinnHubBaseUrl: ${{ secrets.FINNHUBBASEURL }}
        FinnHubTokenHeader: ${{ secrets.FINNHUBTOKENHEADER }}
-       ApiKey: ${{ secrets.APIKEY }}
+       FinnHubApiKey: ${{ secrets.APIKEY }}
        UsePremiumOptions: ${{ secrets.USEPREMIUMOPTIONS }}
       run: dotnet test --no-restore --verbosity normal
