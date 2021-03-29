@@ -27,7 +27,7 @@ namespace FinnHub.Core
     public class QuoteCandle
     {
         [JsonProperty("c")]
-        public List<string> CurrentPrice { get; set; }
+        public List<string> ClosePrice { get; set; }
 
         [JsonProperty("h")]
         public List<string> HighPrice { get; set; }
