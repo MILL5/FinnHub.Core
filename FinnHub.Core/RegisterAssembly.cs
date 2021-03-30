@@ -34,6 +34,7 @@ namespace FinnHub.Core
                 client.BaseAddress = new Uri(FINNHUB_URL);
                 client.DefaultRequestHeaders.Add(FINNHUB_TOKEN_HEADER, settings.ApiKey);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip,deflate,br");
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
                 AllowAutoRedirect = false,
