@@ -176,16 +176,16 @@ namespace FinnHub.Tests
 
         // Requires premium subscription
         
-        // [TestMethod]
-        // public async Task GetTargetByTicker()
-        // {
-        //     var service = GetService<IFinnHubClient>();
-        //
-        //     var target = await service.GetTargetAsync(ticker: TICKER);
-        //
-        //     Assert.IsNotNull(target);
-        //     Assert.IsTrue(target.Symbol == TICKER);
-        // }
+        [TestMethod]
+        public async Task GetTargetByTicker()
+        {
+            var service = GetService<IFinnHubClient>();
+        
+            var target = await service.GetTargetAsync(ticker: TICKER);
+        
+            Assert.IsNotNull(target);
+            Assert.IsTrue(target.Symbol == TICKER);
+        }
 
         [TestMethod]
         public async Task GetEPSsByTicker()

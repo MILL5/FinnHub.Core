@@ -53,13 +53,16 @@ namespace FinnHub.Core
 
             using (var client = _dependencies.HttpClientFactory.CreateClient(HTTPCLIENT_NAME))
             {
-                string requestURL = _dependencies.Settings.UsePremiumOptions ? $"{client.BaseAddress}{COMPANY_PROFILE_PREMIUM_ENDPOINT}{ticker}" :
+                var requestURL = _dependencies.Settings.UsePremiumOptions ? $"{client.BaseAddress}{COMPANY_PROFILE_PREMIUM_ENDPOINT}{ticker}" :
                 $"{client.BaseAddress}{COMPANY_PROFILE_REGULAR_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
                     using (var response = await client.SendAsync(request))
                     {
-                        if (!response.IsSuccessStatusCode) return null;
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            throw new HttpRequestException(response.RequestMessage.ToString());
+                        }
                         var content = await response.Content.ReadAsStringAsync();
 
                         if (!expandAbbreviation)
