@@ -29,6 +29,9 @@ namespace FinnHub.Core
             services.AddTransient<IFinnHubDependencies, FinnHubDependencies>();
             services.AddTransient<IFinnHubClient, FinnHubClient>();
             services.AddTransient<BrotliCompressionHandler>();
+
+            services.AddAutoMapper(typeof(RegisterAssembly));
+            
             services.AddHttpClient(HTTPCLIENT_NAME, client =>
             {
                 client.BaseAddress = new Uri(FINNHUB_URL);

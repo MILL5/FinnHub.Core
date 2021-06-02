@@ -33,6 +33,18 @@ namespace FinnHub.Tests
             Assert.IsNotNull(companyInfo);
             Assert.IsTrue(companyInfo.Ticker == TICKER);
         }
+        
+        [TestMethod]
+        public async Task GetCompanyInfoWithExpansionByTicker()
+        {
+            var service = GetService<IFinnHubClient>();
+
+            var companyInfo = await service.GetCompanyInfoAsync("AAPL", true);
+
+            Assert.IsNotNull(companyInfo);
+            Assert.IsTrue(companyInfo.Ticker == "AAPL");
+            Assert.IsTrue(companyInfo.Name == "Apple Incorporated");
+        }
 
         [TestMethod]
         public async Task GetBasicFinancialsByTickerAndMetric()
@@ -162,16 +174,18 @@ namespace FinnHub.Tests
             Assert.IsNotNull(recommendations.Count > 1);
         }
 
-        [TestMethod]
-        public async Task GetTargetByTicker()
-        {
-            var service = GetService<IFinnHubClient>();
-
-            var target = await service.GetTargetAsync(ticker: TICKER);
-
-            Assert.IsNotNull(target);
-            Assert.IsTrue(target.Symbol == TICKER);
-        }
+        // Requires premium subscription
+        
+        // [TestMethod]
+        // public async Task GetTargetByTicker()
+        // {
+        //     var service = GetService<IFinnHubClient>();
+        //
+        //     var target = await service.GetTargetAsync(ticker: TICKER);
+        //
+        //     Assert.IsNotNull(target);
+        //     Assert.IsTrue(target.Symbol == TICKER);
+        // }
 
         [TestMethod]
         public async Task GetEPSsByTicker()

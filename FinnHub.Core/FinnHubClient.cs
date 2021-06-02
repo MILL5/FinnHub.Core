@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using static Newtonsoft.Json.JsonConvert;
 using static Pineapple.Common.Preconditions;
 using System;
+using AutoMapper;
 
 namespace FinnHub.Core
 {
@@ -32,6 +33,7 @@ namespace FinnHub.Core
 
         private readonly JsonSerializerSettings _jsonSettings;
         private readonly IFinnHubDependencies _dependencies;
+        private readonly IMapper _mapper;
 
         public FinnHubClient(IFinnHubDependencies dependencies)
         {
@@ -42,9 +44,10 @@ namespace FinnHub.Core
                 NullValueHandling = NullValueHandling.Ignore,
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
+            _mapper = dependencies.Mapper;
         }
 
-        public async Task<CompanyInfo> GetCompanyInfoAsync(string ticker)
+        public async Task<CompanyInfo> GetCompanyInfoAsync(string ticker, bool expandAbbreviation = false)
         {
             CheckIsNotNullOrWhitespace(nameof(ticker), ticker);
 
@@ -56,13 +59,18 @@ namespace FinnHub.Core
                 {
                     using (var response = await client.SendAsync(request))
                     {
-                        if (response.IsSuccessStatusCode)
+                        if (!response.IsSuccessStatusCode) return null;
+                        var content = await response.Content.ReadAsStringAsync();
+
+                        if (!expandAbbreviation)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
                             return DeserializeObject<CompanyInfo>(content);
                         }
-                        else
-                            return null;
+
+                        var company = DeserializeObject<CompanyInfo>(content);
+                        var mappedCompany = _mapper.Map<CompanyInfo>(company);
+
+                        return mappedCompany;
                     }
                 }
             }
