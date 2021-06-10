@@ -57,13 +57,13 @@ namespace FinnHub.Core
                 $"{client.BaseAddress}{COMPANY_PROFILE_REGULAR_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (!response.IsSuccessStatusCode)
                         {
                             throw new HttpRequestException(response.RequestMessage.ToString());
                         }
-                        var content = await response.Content.ReadAsStringAsync();
+                        var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                         if (!expandAbbreviation)
                         {
@@ -89,11 +89,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{METRIC_ENDPOINT}{ticker}&metric={metric}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<BasicFinancials>(content);
                         }
                         else
@@ -114,11 +114,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{PEERS_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<List<string>>(content);
                         }
                         else
@@ -139,11 +139,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{NEWS_SENTIMENT_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<SentimentRoot>(content);
                         }
                         else
@@ -165,11 +165,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{FINANCIALS_REPORTED_ENDPOINT}{ticker}{"&freq="}{freq}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<ReportedFinancials>(content);
                         }
                         else
@@ -190,11 +190,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{NEWS_ENDPOINT}{category}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<List<News>>(content);
                         }
                         else
@@ -217,11 +217,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{COMPANY_NEWS_ENDPOINT}{ticker}{"&from="}{startDate}{"&to="}{endDate}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<List<News>>(content);
                         }
                         else
@@ -242,11 +242,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{STOCK_SYMBOLS_ENDPOINT}{exchange}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<List<Symbol>>(content);
                         }
                         else
@@ -267,11 +267,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{QUOTE_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<Quote>(content);
                         }
                         else
@@ -292,11 +292,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{FILINGS_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<List<Filing>>(content);
                         }
                         else
@@ -318,11 +318,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{IPO_CALENDAR_ENDPOINT}{startDate}{"&to="}{endDate}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<IpoCalendar>(content);
                         }
                         else
@@ -343,11 +343,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{RECOMMENDATION_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<List<Recommendation>>(content);
                         }
                         else
@@ -368,11 +368,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{STOCK_PRICE_TARGET_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<Target>(content);
                         }
                         else
@@ -393,11 +393,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{STOCK_EARNINGS_ENDPOINT}{ticker}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<List<EPS>>(content);
                         }
                         else
@@ -419,11 +419,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{CALENDAR_EARNINGS_ENDPOINT}{startDate}{"&to="}{endDate}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<EarningsCalendar>(content);
                         }
                         else
@@ -454,11 +454,11 @@ namespace FinnHub.Core
                 string requestURL = $"{client.BaseAddress}{candleParameters}";
                 using (var request = new HttpRequestMessage(HttpMethod.Get, requestURL))
                 {
-                    using (var response = await client.SendAsync(request))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                             return DeserializeObject<QuoteCandle>(content);
                         }
                         else
