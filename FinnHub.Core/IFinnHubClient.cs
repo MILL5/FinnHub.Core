@@ -6,7 +6,7 @@ namespace FinnHub.Core
 {
     public interface IFinnHubClient
     {
-        Task<CompanyInfo> GetCompanyInfoAsync(string ticker);
+        Task<CompanyInfo> GetCompanyInfoAsync(string ticker, bool expandAbbreviations = false);
         Task<BasicFinancials> GetBasicFinancialsAsync(string ticker, string metric);
         Task<List<string>> GetPeersAsync(string ticker);
         Task<SentimentRoot> GetSentimentAsync(string ticker);
